@@ -14,11 +14,11 @@ namespace TwitchBotPlugin
 {
     public class Module : IPluginModule
     {
-        public static Lazy<ITwitchAPI> TwitchAPI { get; set; } = new Lazy<ITwitchAPI>(() => new TwitchAPI());
+        public static YAB.Plugins.Injectables.Lazy<ITwitchAPI> TwitchAPI { get; set; } = new YAB.Plugins.Injectables.Lazy<ITwitchAPI>(() => new TwitchAPI());
 
-        public static Lazy<ITwitchClient> TwitchClient { get; set; }
+        public static YAB.Plugins.Injectables.Lazy<ITwitchClient> TwitchClient { get; set; }
 
-        public static Lazy<FollowerService> TwitchFollowerService { get; set; } = new Lazy<FollowerService>(() => new FollowerService(TwitchAPI.Value));
+        public static YAB.Plugins.Injectables.Lazy<FollowerService> TwitchFollowerService { get; set; } = new YAB.Plugins.Injectables.Lazy<FollowerService>(() => new FollowerService(TwitchAPI.Value));
 
         public void RegisterBackgroundTasks(Action<Type> registerer)
         {

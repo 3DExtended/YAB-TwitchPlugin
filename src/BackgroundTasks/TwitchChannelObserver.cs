@@ -36,7 +36,7 @@ namespace TwitchBotPlugin.BackgroundTasks
 
         public Task InitializeAsync(CancellationToken cancellation)
         {
-            Module.TwitchClient = new Lazy<TwitchLib.Client.Interfaces.ITwitchClient>(() => new TwitchClient());
+            Module.TwitchClient = new YAB.Plugins.Injectables.Lazy<TwitchLib.Client.Interfaces.ITwitchClient>(() => new TwitchClient());
             var creds = new ConnectionCredentials(_twitchOptions.TwitchBotUsername, _twitchOptions.TwitchBotToken);
 
             var client = Module.TwitchClient.Value;
@@ -63,6 +63,8 @@ namespace TwitchBotPlugin.BackgroundTasks
                 _logger.LogInformation("Hello from Plugin 1");
                 await Task.Delay(5_000).ConfigureAwait(false);
             }
+
+            client.Disconnect();
         }
 
         private void OnTwitchClientChatCommandReceived(object sender, OnChatCommandReceivedArgs e)
