@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -75,6 +76,7 @@ namespace TwitchBotPlugin.BackgroundTasks
             {
                 Id = Guid.NewGuid(),
                 Command = e.Command.CommandText,
+                Arguments = e.Command.ArgumentsAsList == null ? new List<string>() : e.Command.ArgumentsAsList,
                 User = new User
                 {
                     DisplayName = e.Command.ChatMessage.DisplayName,
