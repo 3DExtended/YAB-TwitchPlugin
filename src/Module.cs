@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 
-using TwitchLib.Api;
 using TwitchLib.Api.Interfaces;
 using TwitchLib.Api.Services;
 using TwitchLib.Client.Interfaces;
@@ -14,7 +13,7 @@ namespace TwitchBotPlugin
 {
     public class Module : IPluginModule
     {
-        public static YAB.Plugins.Injectables.Lazy<ITwitchAPI> TwitchAPI { get; set; } = new YAB.Plugins.Injectables.Lazy<ITwitchAPI>(() => new TwitchAPI());
+        public static YAB.Plugins.Injectables.Lazy<ITwitchAPI> TwitchAPI { get; set; }
 
         public static YAB.Plugins.Injectables.Lazy<ITwitchClient> TwitchClient { get; set; }
 

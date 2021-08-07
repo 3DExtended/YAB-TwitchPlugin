@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 using Microsoft.Extensions.Logging;
@@ -21,7 +22,13 @@ namespace TwitchBotPlugin.Reactors
 
         public Task RunAsync(SendPredefinedTwitchMessageReactorConfiguration config, CommandEventBase evt, CancellationToken cancellationToken)
         {
-            Module.TwitchClient.Value.SendMessage(Module.TwitchClient.Value.JoinedChannels[0], $"{config.Answer}");
+            if (evt.Arguments.Count > 0 && evt.Arguments.First().StartsWith("@"))
+            {
+                Module.TwitchClient.Value.SendMessage(Module.TwitchClient.Value.JoinedChannels[0], $"{evt.Arguments.First()}: {config.Answer}");
+            }
+            else { 
+                Module.TwitchClient.Value.SendMessage(Module.TwitchClient.Value.JoinedChannels[0], $"{config.Answer}");
+            }
             return Task.CompletedTask;
         }
 
