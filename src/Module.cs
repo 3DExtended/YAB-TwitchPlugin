@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Linq;
 
+using TwitchBotPlugin.src.Options;
+
 using TwitchLib.Api.Interfaces;
 using TwitchLib.Api.Services;
 using TwitchLib.Client.Interfaces;
@@ -8,6 +10,7 @@ using TwitchLib.Client.Interfaces;
 using YAB.Core.EventReactor;
 using YAB.Core.Events;
 using YAB.Plugins;
+using YAB.Plugins.Injectables.Options;
 
 namespace TwitchBotPlugin
 {
@@ -44,6 +47,11 @@ namespace TwitchBotPlugin
             {
                 registerer(type);
             }
+        }
+
+        public void RegisterPluginOptions(Action<IOptions> registerer)
+        {
+            registerer(new TwitchOptions());
         }
     }
 }

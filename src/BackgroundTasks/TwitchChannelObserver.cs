@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 
 using TwitchBotPlugin.Events;
+using TwitchBotPlugin.src.Options;
 
 using TwitchLib.Api;
 using TwitchLib.Api.Services.Events;

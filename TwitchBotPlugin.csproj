@@ -17,22 +17,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="YAB.Core">
-      <HintPath>..\..\src\applications\YAB.Api\bin\Debug\net5.0\YAB.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="YAB.Core.Pipelines">
-      <HintPath>..\..\src\applications\YAB.Api\bin\Debug\net5.0\YAB.Core.Pipelines.dll</HintPath>
-    </Reference>
-    <Reference Include="YAB.Plugins">
-      <HintPath>..\..\src\applications\YAB.Api\bin\Debug\net5.0\YAB.Plugins.dll</HintPath>
-    </Reference>
-    <Reference Include="YAB.Plugins.Injectables">
-      <HintPath>..\..\src\applications\YAB.Api\bin\Debug\net5.0\YAB.Plugins.Injectables.dll</HintPath>
-    </Reference>
+    <Folder Include="Properties\" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Properties\" />
+    <ProjectReference Include="..\..\src\libraries\YAB.Core\YAB.Core.csproj" />
+    <ProjectReference Include="..\..\src\libraries\YAB.Plugins.Injectables\YAB.Plugins.Injectables.csproj" />
+    <ProjectReference Include="..\..\src\libraries\YAB.Plugins\YAB.Plugins.csproj" />
+    <ProjectReference Include="..\..\src\libraries\YAB.Services.Common\YAB.Services.Common.csproj" />
   </ItemGroup>
 
 </Project>
