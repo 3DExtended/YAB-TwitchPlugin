@@ -30,14 +30,14 @@ steps:
   displayName: Build Project
   inputs:
     command: 'build'
-    projects: './TwitchPlugin/TwitchPlugin.csproj'
+    projects: './TwitchBotPlugin/TwitchBotPlugin.csproj'
 
 - task: DotNetCoreCLI@2
   displayName: Publish project
   inputs:
     command: 'publish'
     publishWebProjects: false
-    projects: './TwitchPlugin/TwitchPlugin.csproj'
+    projects: './TwitchBotPlugin/TwitchBotPlugin.csproj'
     arguments: '-o $(Build.BinariesDirectory)'
   
 
