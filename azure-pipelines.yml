@@ -61,6 +61,6 @@ steps:
     action: 'create'
     target: '$(Build.SourceVersion)'
     tagSource: 'userSpecifiedTag'
-    tag: 'latest'
+    tag: '$(Build.BuildId)'
     changeLogCompareToRelease: 'lastFullRelease'
     changeLogType: 'commitBased'
