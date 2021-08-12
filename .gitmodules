@@ -1,0 +1,3 @@
+[submodule "framework/yetanotherbot"]
+	path = framework/yetanotherbot
+	url = https://3dextended@dev.azure.com/3dextended/YetAnotherbot/_git/YetAnotherbot
