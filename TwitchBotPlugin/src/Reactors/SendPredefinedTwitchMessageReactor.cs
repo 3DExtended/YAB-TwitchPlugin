@@ -22,11 +22,17 @@ namespace TwitchBotPlugin.Reactors
 
         public Task RunAsync(SendPredefinedTwitchMessageReactorConfiguration config, CommandEventBase evt, CancellationToken cancellationToken)
         {
+            if (Module.TwitchClient.Value.JoinedChannels.Count == 0)
+            {
+                return Task.CompletedTask;
+            }
+
             if (evt.Arguments.Count > 0 && evt.Arguments.First().StartsWith("@"))
             {
                 Module.TwitchClient.Value.SendMessage(Module.TwitchClient.Value.JoinedChannels[0], $"{evt.Arguments.First()}: {config.Answer}");
             }
-            else { 
+            else
+            {
                 Module.TwitchClient.Value.SendMessage(Module.TwitchClient.Value.JoinedChannels[0], $"{config.Answer}");
             }
             return Task.CompletedTask;
@@ -34,6 +40,11 @@ namespace TwitchBotPlugin.Reactors
 
         public Task RunAsync(SendPredefinedTwitchMessageReactorConfiguration config, UserMessageEventBase evt, CancellationToken cancellationToken)
         {
+            if (Module.TwitchClient.Value.JoinedChannels.Count == 0)
+            {
+                return Task.CompletedTask;
+            }
+
             Module.TwitchClient.Value.SendMessage(Module.TwitchClient.Value.JoinedChannels[0], $"{config.Answer}");
             return Task.CompletedTask;
         }

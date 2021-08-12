@@ -28,6 +28,11 @@ namespace TwitchBotPlugin.Reactors
 
         public async Task RunAsync(AddPredefinedTwitchMessagePipelineReactorConfiguration config, TwitchCommandEvent evt, CancellationToken cancellationToken)
         {
+            if (Module.TwitchClient.Value.JoinedChannels.Count == 0)
+            {
+                return;
+            }
+
             // assert evt has at least two arguments: first the command itself and secondly the new response
             var commandName = evt.Arguments?.FirstOrDefault();
             if (commandName == null)

@@ -26,6 +26,11 @@ namespace TwitchBotPlugin.Reactors
 
         public async Task RunAsync(EditPredefinedTwitchMessagePipelineReactorConfiguration config, TwitchCommandEvent evt, CancellationToken cancellationToken)
         {
+            if (Module.TwitchClient.Value.JoinedChannels.Count == 0)
+            {
+                return;
+            }
+
             // assert evt has at least two arguments: first the command itself and secondly the new response
             var commandName = evt.Arguments?.FirstOrDefault();
             if (commandName == null)
@@ -75,7 +80,6 @@ namespace TwitchBotPlugin.Reactors
                 sendPredefinedTwitchMessageReactorConfiguration.Answer = newResponse;
                 await _pipelineStore.SavePipelinesAsync(cancellationToken).ConfigureAwait(false);
                 Module.TwitchClient.Value.SendMessage(Module.TwitchClient.Value.JoinedChannels[0], $"Successfully updated command {commandName}.");
-
             }
             else
             {

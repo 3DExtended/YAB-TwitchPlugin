@@ -20,7 +20,7 @@ namespace TwitchBotPlugin
 
         public static YAB.Plugins.Injectables.Lazy<ITwitchClient> TwitchClient { get; set; }
 
-        public static YAB.Plugins.Injectables.Lazy<FollowerService> TwitchFollowerService { get; set; } = new YAB.Plugins.Injectables.Lazy<FollowerService>(() => new FollowerService(TwitchAPI.Value));
+        public static YAB.Plugins.Injectables.Lazy<FollowerService> TwitchFollowerService { get; set; }
 
         public void RegisterBackgroundTasks(Action<Type> registerer)
         {

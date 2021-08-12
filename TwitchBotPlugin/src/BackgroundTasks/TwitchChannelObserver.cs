@@ -10,6 +10,7 @@ using TwitchBotPlugin.Events;
 using TwitchBotPlugin.src.Options;
 
 using TwitchLib.Api;
+using TwitchLib.Api.Services;
 using TwitchLib.Api.Services.Events;
 using TwitchLib.Api.Services.Events.FollowerService;
 using TwitchLib.Client;
@@ -20,7 +21,6 @@ using TwitchLib.Communication.Events;
 using YAB.Core.Contracts;
 using YAB.Plugins;
 using YAB.Plugins.Injectables;
-using YAB.Plugins.Injectables.Options;
 
 namespace TwitchBotPlugin.BackgroundTasks
 {
@@ -66,11 +66,13 @@ namespace TwitchBotPlugin.BackgroundTasks
             client.OnReSubscriber += OnTwitchClientReSubscriber;
             client.Connect();
 
+            Module.TwitchFollowerService = new YAB.Plugins.Injectables.Lazy<FollowerService>(() => new FollowerService(Module.TwitchAPI.Value));
             Module.TwitchFollowerService.Value.SetChannelsByName(new List<string> { _twitchOptions.TwitchChannelToJoin });
 
             Module.TwitchFollowerService.Value.OnServiceTick += OnTwitchFollowerServiceUpdate;
             Module.TwitchFollowerService.Value.OnNewFollowersDetected += OnTwitchNewFollowers;
             Module.TwitchFollowerService.Value.Start();
+
             await Module.TwitchFollowerService.Value.UpdateLatestFollowersAsync(callEvents: true).ConfigureAwait(false);
         }
 
@@ -80,13 +82,28 @@ namespace TwitchBotPlugin.BackgroundTasks
 
             while (!cancellationToken.IsCancellationRequested)
             {
-                _logger.LogInformation("Hello from Plugin 1");
                 await Task.Delay(5_000).ConfigureAwait(false);
             }
 
+            client.OnLog -= OnTwitchClientLog;
+            client.OnError -= OnTwitchClientError;
+            client.OnMessageReceived -= OnTwitchClientMessageReceived;
+            client.OnChatCommandReceived -= OnTwitchClientChatCommandReceived;
+            client.OnNewSubscriber -= OnTwitchClientNewSubscriber;
+            client.OnReSubscriber -= OnTwitchClientReSubscriber;
+
+            Module.TwitchFollowerService.Value.OnServiceTick -= OnTwitchFollowerServiceUpdate;
+            Module.TwitchFollowerService.Value.OnNewFollowersDetected -= OnTwitchNewFollowers;
+
             client.Disconnect();
 
-            Module.TwitchFollowerService.Value.Stop();
+            Module.TwitchFollowerService?.Value?.Stop();
+
+            Module.TwitchAPI = null;
+            Module.TwitchClient = null;
+            Module.TwitchFollowerService = null;
+
+            Console.WriteLine("Killed everything");
         }
 
         private void OnTwitchClientChatCommandReceived(object sender, OnChatCommandReceivedArgs e)
