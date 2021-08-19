@@ -10,8 +10,8 @@ using YAB.Core.Events;
 namespace TwitchBotPlugin.Reactors
 {
     public class SendPredefinedTwitchMessageReactor :
-        IEventReactor<SendPredefinedTwitchMessageReactorConfiguration, CommandEventBase>,
-        IEventReactor<SendPredefinedTwitchMessageReactorConfiguration, UserMessageEventBase>
+        IEventReactor<SendPredefinedTwitchMessageReactorConfiguration, EventBase>,
+        IEventReactor<SendPredefinedTwitchMessageReactorConfiguration, CommandEventBase>
     {
         private readonly ILogger _logger;
 
@@ -38,7 +38,7 @@ namespace TwitchBotPlugin.Reactors
             return Task.CompletedTask;
         }
 
-        public Task RunAsync(SendPredefinedTwitchMessageReactorConfiguration config, UserMessageEventBase evt, CancellationToken cancellationToken)
+        public Task RunAsync(SendPredefinedTwitchMessageReactorConfiguration config, EventBase evt, CancellationToken cancellationToken)
         {
             if (Module.TwitchClient.Value.JoinedChannels.Count == 0)
             {
