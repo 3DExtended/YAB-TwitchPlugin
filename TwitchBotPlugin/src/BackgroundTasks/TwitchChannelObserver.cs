@@ -73,7 +73,7 @@ namespace TwitchBotPlugin.BackgroundTasks
             Module.TwitchFollowerService.Value.OnNewFollowersDetected += OnTwitchNewFollowers;
             Module.TwitchFollowerService.Value.Start();
 
-            await Module.TwitchFollowerService.Value.UpdateLatestFollowersAsync(callEvents: true).ConfigureAwait(false);
+            await Module.TwitchFollowerService.Value.UpdateLatestFollowersAsync(callEvents: false).ConfigureAwait(false);
         }
 
         public async Task RunUntilCancelledAsync(CancellationToken cancellationToken)
