@@ -61,6 +61,8 @@ namespace TwitchBotPlugin.Reactors
             }
 
             _pipelineStore.Pipelines.Add(Pipeline.CreateForEvent<TwitchCommandEvent>(
+                "Twitch Message Pipeline - !" + commandName,
+                $"This pipeline lets the bot answer after someone entered \"{commandName}\" into chat.",
                 new Filter
                 {
                     FilterValue = commandName,
