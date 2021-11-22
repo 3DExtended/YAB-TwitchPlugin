@@ -8,6 +8,9 @@ namespace TwitchBotPlugin.Reactors
     public class SendPredefinedTwitchMessageReactorConfiguration :
         IEventReactorConfiguration<SendPredefinedTwitchMessageReactor, CommandEventBase>
     {
+        [PropertyDescription(false, "The message will be send after this amount of seconds.")]
+        public int? DelayTaskForSeconds { get; set; }
+
         /// <summary>
         /// This determines what the bot should respond if a pipeline uses the SendPredefinedTwitchMessageReactorConfiguration
         /// </summary>
