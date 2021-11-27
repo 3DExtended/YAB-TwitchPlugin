@@ -119,7 +119,6 @@ namespace TwitchBotPlugin.BackgroundTasks
                 {
                     DisplayName = e.Command.ChatMessage.DisplayName,
                     Id = e.Command.ChatMessage.UserId,
-                    Plattform = YAB.Core.PluginPlattform.Twitch
                 }
             }, default);
         }
@@ -146,7 +145,6 @@ namespace TwitchBotPlugin.BackgroundTasks
                 {
                     DisplayName = e.ChatMessage.DisplayName,
                     Id = e.ChatMessage.UserId,
-                    Plattform = YAB.Core.PluginPlattform.Twitch
                 }
             }, default);
         }
@@ -162,7 +160,6 @@ namespace TwitchBotPlugin.BackgroundTasks
                 {
                     DisplayName = e.Subscriber.DisplayName,
                     Id = e.Subscriber.UserId,
-                    Plattform = YAB.Core.PluginPlattform.Twitch
                 }
             }, default);
         }
@@ -177,7 +174,6 @@ namespace TwitchBotPlugin.BackgroundTasks
                 {
                     DisplayName = e.ReSubscriber.DisplayName,
                     Id = e.ReSubscriber.UserId,
-                    Plattform = YAB.Core.PluginPlattform.Twitch
                 }
             }, default);
         }
@@ -200,7 +196,6 @@ namespace TwitchBotPlugin.BackgroundTasks
                     {
                         DisplayName = follower.FromUserName,
                         Id = follower.FromUserId,
-                        Plattform = YAB.Core.PluginPlattform.Twitch
                     }
                 }, default);
             }

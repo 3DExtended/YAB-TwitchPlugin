@@ -1,10 +1,11 @@
-﻿using YAB.Core.EventReactor;
+﻿using YAB.Core.Annotations;
+using YAB.Core.EventReactor;
 using YAB.Core.Events;
 using YAB.Plugins.Injectables.Options;
 
 namespace TwitchBotPlugin.Reactors
 {
-    [ReactorConfigurationDescription("Sends a message in the name of the bot into the joined channel chat.")]
+    [ClassDescription("Sends a message in the name of the bot into the joined channel chat.")]
     public class SendPredefinedTwitchMessageReactorConfiguration :
         IEventReactorConfiguration<SendPredefinedTwitchMessageReactor, CommandEventBase>
     {

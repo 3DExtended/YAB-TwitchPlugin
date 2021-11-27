@@ -1,4 +1,5 @@
-﻿using YAB.Plugins.Injectables.Options;
+﻿using YAB.Core.Annotations;
+using YAB.Plugins.Injectables.Options;
 
 namespace TwitchBotPlugin.src.Options
 {
