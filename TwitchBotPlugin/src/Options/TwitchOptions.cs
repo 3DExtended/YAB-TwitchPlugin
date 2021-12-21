@@ -1,7 +1,7 @@
 ﻿using YAB.Core.Annotations;
 using YAB.Plugins.Injectables.Options;
 
-namespace TwitchBotPlugin.src.Options
+namespace TwitchBotPlugin.Options
 {
     public class TwitchOptions : Options<TwitchOptions>
     {

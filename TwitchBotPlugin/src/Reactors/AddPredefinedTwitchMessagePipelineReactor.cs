@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 
 using TwitchBotPlugin.Events;
+using TwitchBotPlugin.FilterExtensions.UserGroups;
 
 using YAB.Core.EventReactor;
+using YAB.Core.Filters;
 using YAB.Core.Pipeline;
 using YAB.Core.Pipelines.Filter;
 using YAB.Plugins.Injectables;
@@ -51,7 +53,7 @@ namespace TwitchBotPlugin.Reactors
 
             // first, try finding pipeline for event message:
             var pipelinesToEdit = _pipelineStore.Pipelines
-                .Where(p => p.EventFilter is Filter filter && filter.PropertyName == "Command" && filter.FilterValue == commandName && p.EventType.FullName == typeof(TwitchCommandEvent).FullName)
+                .Where(p => p.EventFilter is FilterExtension filter && filter.CustomFilterConfiguration is EventPropertyFilterConfiguration epfc && epfc.PropertyName == "Command" && epfc.FilterValue == commandName && p.EventType.FullName == typeof(TwitchCommandEvent).FullName)
                 .ToList();
 
             if (pipelinesToEdit.Count != 0)
@@ -60,16 +62,55 @@ namespace TwitchBotPlugin.Reactors
                 return;
             }
 
+            var filter = new FilterGroup
+            {
+                Operator = LogicalOperator.And,
+                Filters = new[] {
+                    new FilterExtension
+                    {
+                        CustomFilterConfiguration = new EventPropertyFilterConfiguration
+                        {
+                            FilterValue = commandName,
+                            IgnoreValueCasing = true,
+                            Operator = FilterOperator.Equals,
+                            PropertyName = "Command"
+                        }
+                    }
+                }
+            };
+
+            if (response.Contains("#streameronly"))
+            {
+                filter.Filters = filter.Filters.Append(new FilterExtension
+                {
+                    CustomFilterConfiguration = new UserIsTwitchStreamerFilterConfiguration()
+                }).ToList();
+
+                response = response.Replace("#streameronly", string.Empty).Trim();
+            }
+            else if (response.Contains("#modonly"))
+            {
+                filter.Filters = filter.Filters.Append(new FilterExtension
+                {
+                    CustomFilterConfiguration = new UserIsTwitchModeratorFilterConfiguration()
+                }).ToList();
+
+                response = response.Replace("#modonly", string.Empty).Trim();
+            }
+            else if (response.Contains("#viponly"))
+            {
+                filter.Filters = filter.Filters.Append(new FilterExtension
+                {
+                    CustomFilterConfiguration = new UserIsTwitchVIPFilterConfiguration()
+                }).ToList();
+
+                response = response.Replace("#viponly", string.Empty).Trim();
+            }
+
             _pipelineStore.Pipelines.Add(Pipeline.CreateForEvent<TwitchCommandEvent>(
                 "Twitch Message Pipeline - !" + commandName,
                 $"This pipeline lets the bot answer after someone entered \"{commandName}\" into chat.",
-                new Filter
-                {
-                    FilterValue = commandName,
-                    IgnoreValueCasing = true,
-                    Operator = FilterOperator.Equals,
-                    PropertyName = "Command"
-                },
+                filter,
                 new List<IEventReactorConfiguration>
                 {
                     new SendPredefinedTwitchMessageReactorConfiguration

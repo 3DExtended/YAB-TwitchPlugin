@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using TwitchBotPlugin.Events;
 
 using YAB.Core.EventReactor;
+using YAB.Core.Filters;
 using YAB.Core.Pipelines.Filter;
 using YAB.Plugins.Injectables;
 
@@ -49,7 +50,7 @@ namespace TwitchBotPlugin.Reactors
 
             // first, try finding pipeline for event message:
             var pipelinesToEdit = _pipelineStore.Pipelines
-                .Where(p => p.EventFilter is Filter filter && filter.PropertyName == "Command" && filter.FilterValue == commandName && p.EventType.FullName == typeof(TwitchCommandEvent).FullName)
+                .Where(p => p.EventFilter is FilterExtension filter && filter.CustomFilterConfiguration is EventPropertyFilterConfiguration epfc && epfc.PropertyName == "Command" && epfc.FilterValue == commandName && p.EventType.FullName == typeof(TwitchCommandEvent).FullName)
                 .ToList();
 
             if (pipelinesToEdit.Count == 0)

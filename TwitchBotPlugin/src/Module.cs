@@ -1,7 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
-using TwitchBotPlugin.src.Options;
+using TwitchBotPlugin.Options;
 
 using TwitchLib.Api.Interfaces;
 using TwitchLib.Api.Services;
@@ -22,6 +23,10 @@ namespace TwitchBotPlugin
         public static YAB.Plugins.Injectables.Lazy<ITwitchClient> TwitchClient { get; set; }
 
         public static YAB.Plugins.Injectables.Lazy<FollowerService> TwitchFollowerService { get; set; }
+
+        public static List<string> TwitchModerators { get; internal set; } = new List<string>();
+
+        public static List<string> TwitchVIPs { get; internal set; } = new List<string>();
 
         public void RegisterBackgroundTasks(Action<Type> registerer)
         {

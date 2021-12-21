@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 
 using TwitchBotPlugin.Events;
-using TwitchBotPlugin.src.Options;
+using TwitchBotPlugin.Options;
 
 using TwitchLib.Api;
 using TwitchLib.Api.Services;
@@ -41,16 +41,16 @@ namespace TwitchBotPlugin.BackgroundTasks
 
         public async Task InitializeAsync(CancellationToken cancellation)
         {
-            var API = new TwitchAPI();
-            API.Settings.ClientId = _twitchOptions.TwitchBotClientId;
-            API.Settings.Secret = _twitchOptions.TwitchBotSecret;
-            API.Settings.AccessToken = API.Helix.Users.GetAccessToken();
+            var apiClient = new TwitchAPI();
+            apiClient.Settings.ClientId = _twitchOptions.TwitchBotClientId;
+            apiClient.Settings.Secret = _twitchOptions.TwitchBotSecret;
+            apiClient.Settings.AccessToken = apiClient.Helix.Users.GetAccessToken();
 
-            Module.TwitchAPI = new YAB.Plugins.Injectables.Lazy<TwitchLib.Api.Interfaces.ITwitchAPI>(() => API);
-            var user = await API.Helix.Users.GetUsersAsync(logins: new List<string> { _twitchOptions.TwitchChannelToJoin });
-            var followers = await API.Helix.Users.GetUsersFollowsAsync(toId: user.Users.First().Id);
+            Module.TwitchAPI = new YAB.Plugins.Injectables.Lazy<TwitchLib.Api.Interfaces.ITwitchAPI>(() => apiClient);
+            var user = await apiClient.Helix.Users.GetUsersAsync(logins: new List<string> { _twitchOptions.TwitchChannelToJoin }).ConfigureAwait(false);
+            var followers = await apiClient.Helix.Users.GetUsersFollowsAsync(toId: user.Users.First().Id).ConfigureAwait(false);
 
-            var viewers = await API.Undocumented.GetChattersAsync(_twitchOptions.TwitchChannelToJoin);
+            var viewers = await apiClient.Undocumented.GetChattersAsync(_twitchOptions.TwitchChannelToJoin).ConfigureAwait(false);
 
             Module.TwitchClient = new YAB.Plugins.Injectables.Lazy<TwitchLib.Client.Interfaces.ITwitchClient>(() => new TwitchClient());
             var creds = new ConnectionCredentials(_twitchOptions.TwitchBotUsername, _twitchOptions.TwitchBotToken);
@@ -58,6 +58,8 @@ namespace TwitchBotPlugin.BackgroundTasks
             var client = Module.TwitchClient.Value;
             client.Initialize(creds, _twitchOptions.TwitchChannelToJoin);
 
+            client.OnVIPsReceived += OnVIPsReceived;
+            client.OnModeratorsReceived += OnModeratorsReceived;
             client.OnLog += OnTwitchClientLog;
             client.OnError += OnTwitchClientError;
             client.OnMessageReceived += OnTwitchClientMessageReceived;
@@ -85,7 +87,9 @@ namespace TwitchBotPlugin.BackgroundTasks
                 await Task.Delay(5_000).ConfigureAwait(false);
             }
 
+            client.OnVIPsReceived -= OnVIPsReceived;
             client.OnLog -= OnTwitchClientLog;
+            client.OnModeratorsReceived -= OnModeratorsReceived;
             client.OnError -= OnTwitchClientError;
             client.OnMessageReceived -= OnTwitchClientMessageReceived;
             client.OnChatCommandReceived -= OnTwitchClientChatCommandReceived;
@@ -104,6 +108,12 @@ namespace TwitchBotPlugin.BackgroundTasks
             Module.TwitchFollowerService = null;
 
             Console.WriteLine("Killed everything");
+        }
+
+        private void OnModeratorsReceived(object sender, OnModeratorsReceivedArgs e)
+        {
+            Module.TwitchModerators = e.Moderators;
+            _logger.LogInformation(e.ToString());
         }
 
         private void OnTwitchClientChatCommandReceived(object sender, OnChatCommandReceivedArgs e)
@@ -199,6 +209,12 @@ namespace TwitchBotPlugin.BackgroundTasks
                     }
                 }, default);
             }
+        }
+
+        private void OnVIPsReceived(object sender, OnVIPsReceivedArgs e)
+        {
+            Module.TwitchVIPs = e.VIPs;
+            _logger.LogInformation(e.ToString());
         }
     }
 }
