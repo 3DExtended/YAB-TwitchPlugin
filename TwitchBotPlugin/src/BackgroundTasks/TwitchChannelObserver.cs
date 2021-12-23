@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 using Microsoft.Extensions.Logging;
 
+using TwitchBotPlugin.Contracts;
 using TwitchBotPlugin.Events;
 using TwitchBotPlugin.Options;
 
@@ -18,7 +19,6 @@ using TwitchLib.Client.Events;
 using TwitchLib.Client.Models;
 using TwitchLib.Communication.Events;
 
-using YAB.Core.Contracts;
 using YAB.Plugins;
 using YAB.Plugins.Injectables;
 
@@ -125,10 +125,17 @@ namespace TwitchBotPlugin.BackgroundTasks
                 Id = Guid.NewGuid(),
                 Command = e.Command.CommandText,
                 Arguments = e.Command.ArgumentsAsList == null ? new List<string>() : e.Command.ArgumentsAsList,
-                User = new User
+                User = new TwitchUser
                 {
                     DisplayName = e.Command.ChatMessage.DisplayName,
                     Id = e.Command.ChatMessage.UserId,
+                    IsBroadcaster = e.Command.ChatMessage.IsBroadcaster,
+                    IsModerator = e.Command.ChatMessage.IsModerator,
+                    IsSubscriber = e.Command.ChatMessage.IsSubscriber,
+                    IsStaff = e.Command.ChatMessage.IsStaff,
+                    IsPartner = e.Command.ChatMessage.IsPartner,
+                    IsVip = e.Command.ChatMessage.IsVip,
+                    IsTurbo = e.Command.ChatMessage.IsTurbo,
                 }
             }, default);
         }
@@ -151,10 +158,18 @@ namespace TwitchBotPlugin.BackgroundTasks
             {
                 Id = Guid.NewGuid(),
                 Message = e.ChatMessage.Message,
-                User = new User
+                IsHighlighted = e.ChatMessage.IsHighlighted,
+                User = new TwitchUser
                 {
                     DisplayName = e.ChatMessage.DisplayName,
                     Id = e.ChatMessage.UserId,
+                    IsBroadcaster = e.ChatMessage.IsBroadcaster,
+                    IsModerator = e.ChatMessage.IsModerator,
+                    IsSubscriber = e.ChatMessage.IsSubscriber,
+                    IsStaff = e.ChatMessage.IsStaff,
+                    IsPartner = e.ChatMessage.IsPartner,
+                    IsVip = e.ChatMessage.IsVip,
+                    IsTurbo = e.ChatMessage.IsTurbo,
                 }
             }, default);
         }
@@ -166,10 +181,14 @@ namespace TwitchBotPlugin.BackgroundTasks
             _eventSender.SendEvent(new TwitchNewSubscribedEvent
             {
                 Id = Guid.NewGuid(),
-                User = new User
+                User = new TwitchUser
                 {
                     DisplayName = e.Subscriber.DisplayName,
                     Id = e.Subscriber.UserId,
+                    IsModerator = e.Subscriber.IsModerator,
+                    IsSubscriber = e.Subscriber.IsSubscriber,
+                    IsPartner = e.Subscriber.IsPartner,
+                    IsTurbo = e.Subscriber.IsTurbo,
                 }
             }, default);
         }
@@ -180,10 +199,14 @@ namespace TwitchBotPlugin.BackgroundTasks
             {
                 Id = Guid.NewGuid(),
                 Month = e.ReSubscriber.Months,
-                User = new User
+                User = new TwitchUser
                 {
                     DisplayName = e.ReSubscriber.DisplayName,
                     Id = e.ReSubscriber.UserId,
+                    IsModerator = e.ReSubscriber.IsModerator,
+                    IsSubscriber = e.ReSubscriber.IsSubscriber,
+                    IsPartner = e.ReSubscriber.IsPartner,
+                    IsTurbo = e.ReSubscriber.IsTurbo,
                 }
             }, default);
         }
@@ -202,7 +225,7 @@ namespace TwitchBotPlugin.BackgroundTasks
                 _eventSender.SendEvent(new TwitchUserFollowedEvent
                 {
                     Id = Guid.NewGuid(),
-                    User = new User
+                    User = new TwitchUser
                     {
                         DisplayName = follower.FromUserName,
                         Id = follower.FromUserId,

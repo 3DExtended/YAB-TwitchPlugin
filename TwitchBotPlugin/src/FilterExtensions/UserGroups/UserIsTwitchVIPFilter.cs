@@ -2,17 +2,18 @@
 using System.Threading;
 using System.Threading.Tasks;
 
+using TwitchBotPlugin.Events;
+
 using TwitchLib.Client.Extensions;
 
-using YAB.Core.Events;
 using YAB.Core.FilterExtension;
 
 namespace TwitchBotPlugin.FilterExtensions.UserGroups
 {
-    public class UserIsTwitchVIPFilter : IFilterExtension<UserIsTwitchVIPFilterConfiguration, UserEventBase>
+    public class UserIsTwitchVIPFilter : IFilterExtension<UserIsTwitchVIPFilterConfiguration, TwitchUserEventBase>
 
     {
-        public Task<bool> RunAsync(UserIsTwitchVIPFilterConfiguration config, UserEventBase evt, CancellationToken cancellationToken)
+        public Task<bool> RunAsync(UserIsTwitchVIPFilterConfiguration config, TwitchUserEventBase evt, CancellationToken cancellationToken)
         {
             if (Module.TwitchVIPs.Any(m => string.Equals(m, evt.User.DisplayName, System.StringComparison.OrdinalIgnoreCase)))
             {

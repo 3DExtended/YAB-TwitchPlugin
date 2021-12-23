@@ -1,15 +1,16 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 
-using YAB.Core.Events;
+using TwitchBotPlugin.Events;
+
 using YAB.Core.FilterExtension;
 
 namespace TwitchBotPlugin.FilterExtensions.UserGroups
 {
-    public class UserIsTwitchStreamerFilter : IFilterExtension<UserIsTwitchStreamerFilterConfiguration, UserEventBase>
+    public class UserIsTwitchStreamerFilter : IFilterExtension<UserIsTwitchStreamerFilterConfiguration, TwitchUserEventBase>
 
     {
-        public Task<bool> RunAsync(UserIsTwitchStreamerFilterConfiguration config, UserEventBase evt, CancellationToken cancellationToken)
+        public Task<bool> RunAsync(UserIsTwitchStreamerFilterConfiguration config, TwitchUserEventBase evt, CancellationToken cancellationToken)
         {
             var twitchClient = Module.TwitchClient.Value;
 

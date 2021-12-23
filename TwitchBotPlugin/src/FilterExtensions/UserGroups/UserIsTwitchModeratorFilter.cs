@@ -2,17 +2,18 @@
 using System.Threading;
 using System.Threading.Tasks;
 
+using TwitchBotPlugin.Events;
+
 using TwitchLib.Client.Extensions;
 
-using YAB.Core.Events;
 using YAB.Core.FilterExtension;
 
 namespace TwitchBotPlugin.FilterExtensions.UserGroups
 {
-    public class UserIsTwitchModeratorFilter : IFilterExtension<UserIsTwitchModeratorFilterConfiguration, UserEventBase>
+    public class UserIsTwitchModeratorFilter : IFilterExtension<UserIsTwitchModeratorFilterConfiguration, TwitchUserEventBase>
 
     {
-        public Task<bool> RunAsync(UserIsTwitchModeratorFilterConfiguration config, UserEventBase evt, CancellationToken cancellationToken)
+        public Task<bool> RunAsync(UserIsTwitchModeratorFilterConfiguration config, TwitchUserEventBase evt, CancellationToken cancellationToken)
         {
             if (Module.TwitchModerators.Any(m => string.Equals(m, evt.User.DisplayName, System.StringComparison.OrdinalIgnoreCase)))
             {
