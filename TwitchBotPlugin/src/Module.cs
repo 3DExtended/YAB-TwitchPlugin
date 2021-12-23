@@ -57,7 +57,7 @@ namespace TwitchBotPlugin
 
         public void RegisterPluginEvents(Action<Type> registerer)
         {
-            var types = typeof(Module).Assembly.GetTypes().Where(t => typeof(EventBase).IsAssignableFrom(t));
+            var types = typeof(Module).Assembly.GetTypes().Where(t => typeof(EventBase).IsAssignableFrom(t) && !t.IsAbstract);
             foreach (var type in types)
             {
                 registerer(type);
